@@ -1,0 +1,42 @@
+service: serverless-lambda-chrome
+frameworkVersion: "1.60.5"
+
+provider:
+  name: aws
+  versionFunctions: false
+  runtime: nodejs12.x
+  region: ap-southeast-2
+  stage: dev
+  profile: hotpuma
+  environment:
+    IS_OFFLINE: ${opt:offline}
+  apiGateway:
+    binaryMediaTypes:
+      - "application/pdf"
+plugins:
+  - serverless-webpack
+  - serverless-domain-manager
+  - serverless-offline
+custom:
+  webpack:
+    webpackConfig: webpack.config.js
+    includeModules: true
+    packager: "yarn"
+
+  serverless-offline:
+    location: .webpack/service
+
+  customDomain:
+    domainName: labs.mianio.com
+    basePath: demo
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
+functions:
+  generate-the-pdf:
+    handler: functions/pdf.generate
+    events:
+      - http:
+          path: puppeteer/pdf
+          method: get
+          cors: true
