@@ -17,10 +17,21 @@ plugins:
   - serverless-webpack
   - serverless-domain-manager
   - serverless-offline
+
+layers:
+  HeadlessChrome:
+    name: HeadlessChrome
+    compatibleRuntimes:
+      - nodejs12.x
+    description: Required for headless chrome
+    package:
+      artifact: layers/chrome_aws_lambda.zip
 custom:
   webpack:
     webpackConfig: webpack.config.js
-    includeModules: true
+    includeModules:
+      forceExclude:
+        - chrome-aws-lambda
     packager: "yarn"
 
   serverless-offline:
@@ -34,7 +45,10 @@ custom:
 
 functions:
   generate-the-pdf:
+    provisionedConcurrency: 2
     handler: functions/pdf.generate
+    layers:
+      - { Ref: HeadlessChromeLambdaLayer }
     events:
       - http:
           path: puppeteer/pdf
