@@ -11,7 +11,7 @@
   "dependencies": {
     "@middy/core": "^1.0.0-beta",
     "@middy/do-not-wait-for-empty-event-loop": "^1.0.0-beta",
-    "aws-lambda": "^1.0.4",
+    "aws-lambda": "^1.0.5",
     "chrome-aws-lambda": "^2.0.2",
     "puppeteer": "^2.0.0",
     "puppeteer-core": "^2.0.0",
